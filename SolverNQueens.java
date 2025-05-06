@@ -18,34 +18,64 @@ public class SolverNQueens {
 
         Chessboard chessboard = new Chessboard(dimension);
 
-        // prints board
-//        int[][] board = chessboard.getBoard();
-//        for (int i = 0; i < dimension; i++) {
-//            for (int j = 0; j < dimension; j++) {
-//                System.out.print(board[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
-//
-//        List<Queen> queens = chessboard.getQueens();
-//        for (Queen queen : queens) {
-//            System.out.println(queen.getIncomingDiagonalAttacks(board));
-//        }
+        List<Chessboard.Queen> queens = chessboard.getQueens();
 
-        Queen mostAttackedQueen;
-        int mostAttacksReceived;
+        int totalAttacks;
+        int totalAttacksAfterSwap;
+
+        boolean swapPerformed;
+        int swapCount = 0;
+        int boardShuffleCount = 0;
+
+//        chessboard.printBoard();
+//        for (Chessboard.Queen queen : queens) {
+//            System.out.println("R: " + queen.getRowPosition() + " <> C: " + queen.getColumnPosition());
+//        }
+//        System.out.println(chessboard.getTotalAttacks());
+//        chessboard.swapQueenColumns(queens.get(0), queens.get(1));
+//        chessboard.printBoard();
+//        for (Chessboard.Queen queen : queens) {
+//            System.out.println("R: " + queen.getRowPosition() + " <> C: " + queen.getColumnPosition());
+//        }
+//        System.out.println(chessboard.getTotalAttacks());
+
 
         while (chessboard.hasQueensUnderAttack()) {
 
-            mostAttackedQueen = chessboard.getMostAttackedQueen();
-            mostAttacksReceived = mostAttackedQueen.getIncomingDiagonalAttacks();
+            totalAttacks = chessboard.getTotalAttacks();
+            swapPerformed = false;
 
+            for (Chessboard.Queen queen : queens) {
+                if (queen.isAttacked()) {
+
+                    for (Chessboard.Queen comparisonQueen : queens) {
+
+                        if (!comparisonQueen.equals(queen)) {
+
+                            chessboard.swapQueenColumns(queen, comparisonQueen);
+                            totalAttacksAfterSwap = chessboard.getTotalAttacks();
+
+                            //System.out.println("Before swap: " +  totalAttacks + "\nAfter swap: " +  totalAttacksAfterSwap);
+                            if (totalAttacksAfterSwap < totalAttacks) {
+                                swapPerformed = true;
+                                //System.out.println("swap");
+                                swapCount++;
+                            }
+                            else {
+                                chessboard.swapQueenColumns(queen, comparisonQueen);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!swapPerformed) {
+                chessboard = new Chessboard(dimension);
+                boardShuffleCount++;
+            }
         }
+
+        System.out.println(swapCount + " total swaps were performed. The board needed to be shuffled " + boardShuffleCount + " times.");
     }
-
-
-
-
-
 
 }
