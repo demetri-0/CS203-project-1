@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,16 +110,65 @@ public class Chessboard {
         }
     }
 
+    public boolean swapReducesAttacks(int queen1Row, int queen2Row) {
+
+        int totalAttacksBefore = 0;
+        int totalAttacksAfter = 0;
+
+        int queen1Column = board[queen1Row];
+        int queen2Column = board[queen2Row];
+
+        totalAttacksBefore += (upwardDiagonals[queen1Row + queen1Column] > 1)
+                ? upwardDiagonals[queen1Row + queen1Column] - 1 : 0;
+        totalAttacksBefore += (downwardDiagonals[queen1Row - queen1Column + (dimension - 1)] > 1)
+                ? downwardDiagonals[queen1Row - queen1Column + (dimension - 1)] - 1 : 0;
+        totalAttacksBefore += (upwardDiagonals[queen2Row + queen2Column] > 1)
+                ? upwardDiagonals[queen2Row + queen2Column] - 1 : 0;
+        totalAttacksBefore += (downwardDiagonals[queen2Row - queen2Column + (dimension - 1)] > 1)
+                ? downwardDiagonals[queen2Row - queen2Column + (dimension - 1)] - 1 : 0;
+
+        upwardDiagonals[queen1Row + queen1Column]--;
+        downwardDiagonals[queen1Row - queen1Column + (dimension - 1)]--;
+        upwardDiagonals[queen2Row + queen2Column]--;
+        downwardDiagonals[queen2Row - queen2Column + (dimension - 1)]--;
+
+        upwardDiagonals[queen1Row + queen2Column]++;
+        downwardDiagonals[queen1Row - queen2Column + (dimension - 1)]++;
+        upwardDiagonals[queen2Row + queen1Column]++;
+        downwardDiagonals[queen2Row - queen1Column + (dimension - 1)]++;
+
+        totalAttacksAfter += (upwardDiagonals[queen1Row + queen2Column] > 1)
+                ? upwardDiagonals[queen1Row + queen2Column] - 1 : 0;
+        totalAttacksAfter += (downwardDiagonals[queen1Row - queen2Column + (dimension - 1)] > 1)
+                ? downwardDiagonals[queen1Row - queen2Column + (dimension - 1)] - 1 : 0;
+        totalAttacksAfter += (upwardDiagonals[queen2Row + queen1Column] > 1)
+                ? upwardDiagonals[queen2Row + queen1Column] - 1 : 0;
+        totalAttacksAfter += (downwardDiagonals[queen2Row - queen1Column + (dimension - 1)] > 1)
+                ? downwardDiagonals[queen2Row - queen1Column + (dimension - 1)] - 1 : 0;
+
+        upwardDiagonals[queen1Row + queen2Column]--;
+        downwardDiagonals[queen1Row - queen2Column + (dimension - 1)]--;
+        upwardDiagonals[queen2Row + queen1Column]--;
+        downwardDiagonals[queen2Row - queen1Column + (dimension - 1)]--;
+
+        upwardDiagonals[queen1Row + queen1Column]++;
+        downwardDiagonals[queen1Row - queen1Column + (dimension - 1)]++;
+        upwardDiagonals[queen2Row + queen2Column]++;
+        downwardDiagonals[queen2Row - queen2Column + (dimension - 1)]++;
+
+        return totalAttacksAfter < totalAttacksBefore;
+    }
+
     public int getTotalAttacks() {
 
         int totalAttacks = 0;
 
         for (int i = 0; i < diagonalCount; i++) {
             if (upwardDiagonals[i] > 1) {
-                totalAttacks += upwardDiagonals[i] * (upwardDiagonals[i] - 1);
+                totalAttacks += upwardDiagonals[i] - 1;
             }
             if (downwardDiagonals[i] > 1) {
-                totalAttacks += downwardDiagonals[i] * (downwardDiagonals[i] - 1);
+                totalAttacks += downwardDiagonals[i] - 1;
             }
         }
 

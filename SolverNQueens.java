@@ -17,6 +17,7 @@ public class SolverNQueens {
         int dimension = scan.nextInt();
 
         Chessboard chessboard = new Chessboard(dimension);
+        //chessboard.printBoard();
 
         int totalAttacks;
         int totalAttacksAfterSwap;
@@ -54,17 +55,23 @@ public class SolverNQueens {
 
                         if (chessboard.queenIsAttacked(queen1Row) || chessboard.queenIsAttacked(queen2Row)) {
 
-                            chessboard.swapQueenColumns(queen1Row, queen2Row);
-                            totalAttacksAfterSwap = chessboard.getTotalAttacks();
+//                            chessboard.swapQueenColumns(queen1Row, queen2Row);
+//                            totalAttacksAfterSwap = chessboard.getTotalAttacks();
+//
+//                            //System.out.println("Before swap: " +  totalAttacks + "\nAfter swap: " +  totalAttacksAfterSwap);
+//                            if (totalAttacksAfterSwap < totalAttacks) {
+//                                swapPerformed = true;
+//                                //System.out.println("swap");
+//                                swapCount++;
+//                            }
+//                            else {
+//                                chessboard.swapQueenColumns(queen1Row, queen2Row);
+//                            }
 
-                            //System.out.println("Before swap: " +  totalAttacks + "\nAfter swap: " +  totalAttacksAfterSwap);
-                            if (totalAttacksAfterSwap < totalAttacks) {
-                                swapPerformed = true;
-                                //System.out.println("swap");
-                                swapCount++;
-                            }
-                            else {
+                            if (chessboard.swapReducesAttacks(queen1Row, queen2Row)) {
                                 chessboard.swapQueenColumns(queen1Row, queen2Row);
+                                swapPerformed = true;
+                                swapCount++;
                             }
                         }
                     }
@@ -77,6 +84,7 @@ public class SolverNQueens {
         }
 
         System.out.println(swapCount + " total swaps were performed. The board needed to be shuffled " + boardShuffleCount + " times.");
+        //chessboard.printBoard();
     }
 
 }
