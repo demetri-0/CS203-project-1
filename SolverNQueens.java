@@ -18,8 +18,6 @@ public class SolverNQueens {
 
         Chessboard chessboard = new Chessboard(dimension);
 
-        List<Chessboard.Queen> queens = chessboard.getQueens();
-
         int totalAttacks;
         int totalAttacksAfterSwap;
 
@@ -27,32 +25,36 @@ public class SolverNQueens {
         int swapCount = 0;
         int boardShuffleCount = 0;
 
+//        int[] board = chessboard.getBoard();
 //        chessboard.printBoard();
-//        for (Chessboard.Queen queen : queens) {
-//            System.out.println("R: " + queen.getRowPosition() + " <> C: " + queen.getColumnPosition());
+//        for (int r = 0; r < dimension; r++) {
+//            System.out.println("R: " + r + " <> C: " + board[r]);
 //        }
+//        System.out.println(Arrays.toString(chessboard.upwardDiagonals));
+//        System.out.println(Arrays.toString(chessboard.downwardDiagonals));
 //        System.out.println(chessboard.getTotalAttacks());
-//        chessboard.swapQueenColumns(queens.get(0), queens.get(1));
+//
+//        chessboard.swapQueenColumns(0, 1);
 //        chessboard.printBoard();
-//        for (Chessboard.Queen queen : queens) {
-//            System.out.println("R: " + queen.getRowPosition() + " <> C: " + queen.getColumnPosition());
+//        for (int r = 0; r < dimension; r++) {
+//            System.out.println("R: " + r + " <> C: " + board[r]);
 //        }
+//        System.out.println(Arrays.toString(chessboard.upwardDiagonals));
+//        System.out.println(Arrays.toString(chessboard.downwardDiagonals));
 //        System.out.println(chessboard.getTotalAttacks());
 
-
-        while (chessboard.hasQueensUnderAttack()) {
+        while (chessboard.getTotalAttacks() > 0) {
 
             totalAttacks = chessboard.getTotalAttacks();
             swapPerformed = false;
 
-            for (Chessboard.Queen queen : queens) {
-                if (queen.isAttacked()) {
+            for (int queen1Row = 0; queen1Row < dimension; queen1Row++) {
 
-                    for (Chessboard.Queen comparisonQueen : queens) {
+                    for (int queen2Row = queen1Row + 1; queen2Row < dimension; queen2Row++) {
 
-                        if (!comparisonQueen.equals(queen)) {
+                        if (chessboard.queenIsAttacked(queen1Row) || chessboard.queenIsAttacked(queen2Row)) {
 
-                            chessboard.swapQueenColumns(queen, comparisonQueen);
+                            chessboard.swapQueenColumns(queen1Row, queen2Row);
                             totalAttacksAfterSwap = chessboard.getTotalAttacks();
 
                             //System.out.println("Before swap: " +  totalAttacks + "\nAfter swap: " +  totalAttacksAfterSwap);
@@ -62,11 +64,10 @@ public class SolverNQueens {
                                 swapCount++;
                             }
                             else {
-                                chessboard.swapQueenColumns(queen, comparisonQueen);
+                                chessboard.swapQueenColumns(queen1Row, queen2Row);
                             }
                         }
                     }
-                }
             }
 
             if (!swapPerformed) {
