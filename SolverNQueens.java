@@ -17,74 +17,41 @@ public class SolverNQueens {
         int dimension = scan.nextInt();
 
         Chessboard chessboard = new Chessboard(dimension);
-        //chessboard.printBoard();
 
-        int totalAttacks;
-        int totalAttacksAfterSwap;
+        int swapCount = 0; // number of swaps performed
+        int boardShuffleCount = 0; // number of boards that have been created (not including the first)
 
-        boolean swapPerformed;
-        int swapCount = 0;
-        int boardShuffleCount = 0;
-
-//        int[] board = chessboard.getBoard();
-//        chessboard.printBoard();
-//        for (int r = 0; r < dimension; r++) {
-//            System.out.println("R: " + r + " <> C: " + board[r]);
-//        }
-//        System.out.println(Arrays.toString(chessboard.upwardDiagonals));
-//        System.out.println(Arrays.toString(chessboard.downwardDiagonals));
-//        System.out.println(chessboard.getTotalAttacks());
-//
-//        chessboard.swapQueenColumns(0, 1);
-//        chessboard.printBoard();
-//        for (int r = 0; r < dimension; r++) {
-//            System.out.println("R: " + r + " <> C: " + board[r]);
-//        }
-//        System.out.println(Arrays.toString(chessboard.upwardDiagonals));
-//        System.out.println(Arrays.toString(chessboard.downwardDiagonals));
-//        System.out.println(chessboard.getTotalAttacks());
-
+        /*
+        The outermost loop runs while there are still colliding queens on the chessboard. All possible queen swaps are
+        iterated through, checking if they reduce the number of attacks on the board. If attacks are reduced, the swap
+        is performed. If the board is not solved after checking and performing swaps, it is randomly reshuffled, and the
+        process repeats.
+         */
         while (chessboard.getTotalAttacks() > 0) {
-
-            totalAttacks = chessboard.getTotalAttacks();
-            swapPerformed = false;
 
             for (int queen1Row = 0; queen1Row < dimension; queen1Row++) {
 
-                    for (int queen2Row = queen1Row + 1; queen2Row < dimension; queen2Row++) {
+                for (int queen2Row = queen1Row + 1; queen2Row < dimension; queen2Row++) {
 
-                        if (chessboard.queenIsAttacked(queen1Row) || chessboard.queenIsAttacked(queen2Row)) {
+                    if (chessboard.queenIsAttacked(queen1Row) || chessboard.queenIsAttacked(queen2Row)) {
 
-//                            chessboard.swapQueenColumns(queen1Row, queen2Row);
-//                            totalAttacksAfterSwap = chessboard.getTotalAttacks();
-//
-//                            //System.out.println("Before swap: " +  totalAttacks + "\nAfter swap: " +  totalAttacksAfterSwap);
-//                            if (totalAttacksAfterSwap < totalAttacks) {
-//                                swapPerformed = true;
-//                                //System.out.println("swap");
-//                                swapCount++;
-//                            }
-//                            else {
-//                                chessboard.swapQueenColumns(queen1Row, queen2Row);
-//                            }
+                        if (chessboard.swapReducesAttacks(queen1Row, queen2Row)) {
 
-                            if (chessboard.swapReducesAttacks(queen1Row, queen2Row)) {
-                                chessboard.swapQueenColumns(queen1Row, queen2Row);
-                                swapPerformed = true;
-                                swapCount++;
-                            }
+                            chessboard.swapQueenColumns(queen1Row, queen2Row);
+                            swapCount++;
                         }
                     }
+                }
             }
 
-            if (!swapPerformed) {
+            // if all collisions have not been eliminated after all performed swaps, the board is reshuffled
+            if (chessboard.getTotalAttacks() > 0) {
                 chessboard = new Chessboard(dimension);
                 boardShuffleCount++;
             }
         }
 
         System.out.println(swapCount + " total swaps were performed. The board needed to be shuffled " + boardShuffleCount + " times.");
-        //chessboard.printBoard();
     }
 
 }
